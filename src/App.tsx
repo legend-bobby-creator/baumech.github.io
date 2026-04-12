@@ -3,15 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { useState, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Compass, 
   Linkedin, 
   Globe, 
   ChevronRight, 
@@ -28,21 +22,34 @@ interface TimeLeft {
 }
 
 export default function App() {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 18, hours: 9, minutes: 42, seconds: 15 });
+  // ZIEL-DATUM: Hier kannst du das Datum anpassen (Jahr-Monat-Tag)
+  const TARGET_DATE = new Date('2026-05-01T00:00:00').getTime();
+
+  const calculateTimeLeft = (): TimeLeft => {
+    const now = new Date().getTime();
+    const difference = TARGET_DATE - now;
+
+    if (difference <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    return {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  };
+
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Countdown logic
+  // Countdown Logik
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        return prev;
-      });
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -51,7 +58,6 @@ export default function App() {
     e.preventDefault();
     if (!email) return;
     setIsSubmitting(true);
-    // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -61,7 +67,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-bg-dark text-white font-sans selection:bg-primary selection:text-white overflow-x-hidden">
-      {/* Hero Background */}
+      {/* Hintergrund */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-bg-dark via-[#0d0f12] to-bg-dark"></div>
         <img 
@@ -70,11 +76,10 @@ export default function App() {
           alt="Engineering Turbine"
           referrerPolicy="no-referrer"
         />
-        {/* Technical Watermark Texture */}
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-blueprint-dots"></div>
       </div>
 
-      {/* Navigation */}
+      {/* Header mit zentriertem Logo */}
       <header className="relative z-50 w-full">
         <nav className="flex justify-center items-center px-6 md:px-12 py-12 max-w-7xl mx-auto">
           <div className="h-20 md:h-28 flex items-center">
@@ -83,7 +88,6 @@ export default function App() {
               alt="BauMech Engineering Logo" 
               className="h-full w-auto object-contain"
               onError={(e) => {
-                // Fallback for dummy display if tif doesn't load
                 (e.target as HTMLImageElement).src = 'https://picsum.photos/seed/baumech/200/60?blur=2';
               }}
               referrerPolicy="no-referrer"
@@ -106,7 +110,7 @@ export default function App() {
           System Initialization in Progress
         </motion.div>
 
-        {/* Main Title */}
+        {/* Titel */}
         <motion.h1 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -126,7 +130,7 @@ export default function App() {
           We are currently finalizing our digital infrastructure to support excellence in civil and mechanical engineering.
         </motion.p>
 
-        {/* Countdown Grid */}
+        {/* Countdown Anzeige */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-20 w-full max-w-4xl">
           {[
             { label: 'Days', value: timeLeft.days },
@@ -151,7 +155,7 @@ export default function App() {
           ))}
         </div>
 
-        {/* Notification Form */}
+        {/* E-Mail Formular */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -204,7 +208,7 @@ export default function App() {
         </motion.div>
       </main>
 
-      {/* Project Status Bar */}
+      {/* Fortschrittsbalken */}
       <div className="relative z-10 w-full max-w-3xl mx-auto px-6 mt-24 mb-32">
         <div className="flex justify-between items-end mb-4">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary font-display">Infrastructure Deployment</span>
@@ -213,7 +217,7 @@ export default function App() {
         <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
           <motion.div 
             initial={{ width: 0 }}
-            animate={{ width: '84%' }}
+            animate={{ width: '86%' }}
             transition={{ duration: 2, ease: "easeOut", delay: 1.2 }}
             className="h-full bg-primary relative"
           >

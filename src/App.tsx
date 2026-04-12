@@ -208,7 +208,7 @@ export default function App() {
       <div className="relative z-10 w-full max-w-3xl mx-auto px-6 mt-24 mb-32">
         <div className="flex justify-between items-end mb-4">
           <span className="text-[10px] font-bold uppercase tracking-widest text-primary font-display">Infrastructure Deployment</span>
-          <span className="text-sm font-black font-display">84%</span>
+          <span className="text-sm font-black font-display">86%</span>
         </div>
         <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
           <motion.div 
